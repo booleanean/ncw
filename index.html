@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" href="./favicon.png" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		
+		<link href="./app/immutable/assets/2.B22N-nAp.css" rel="stylesheet">
+		<link rel="modulepreload" href="./app/immutable/entry/start.C6k8vsTx.js">
+		<link rel="modulepreload" href="./app/immutable/chunks/entry.DXr4F0zo.js">
+		<link rel="modulepreload" href="./app/immutable/chunks/scheduler.Cv6dzE50.js">
+		<link rel="modulepreload" href="./app/immutable/chunks/index.Bvnd0Eds.js">
+		<link rel="modulepreload" href="./app/immutable/entry/app.B7ohu7U_.js">
+		<link rel="modulepreload" href="./app/immutable/chunks/index.Didnr6p9.js">
+		<link rel="modulepreload" href="./app/immutable/nodes/0.DGhAtNvL.js">
+		<link rel="modulepreload" href="./app/immutable/nodes/2.BvJoydCJ.js">
+	</head>
+	<body data-sveltekit-preload-data="hover">
+		<div style="display: contents">  <div class="buttonwrapper svelte-1bc092w"><button class="svelte-1bc092w" data-svelte-h="svelte-j1mpo7">Add Group</button> <button class="svelte-1bc092w" data-svelte-h="svelte-1pityn1">Clear</button></div> <div class="groupwrapper svelte-1bc092w" style="--colcount: 0"></div> <dialog class="svelte-1bc092w"><form class="svelte-1bc092w"><label for="participants" data-svelte-h="svelte-84s6v8">Participants for new group (comma or newline separated):</label> <textarea name="participants" id="#participants" rows="10"></textarea> <button class="svelte-1bc092w" data-svelte-h="svelte-5hbba9">Create Group</button> <button class="svelte-1bc092w" data-svelte-h="svelte-yf8co5">Close</button></form> </dialog> 
+			
+			<script>
+				{
+					__sveltekit_9mvbp3 = {
+						base: new URL(".", location).pathname.slice(0, -1),
+						assets: "/ncw"
+					};
+
+					const element = document.currentScript.parentElement;
+
+					const data = [null,null];
+
+					Promise.all([
+						import("./app/immutable/entry/start.C6k8vsTx.js"),
+						import("./app/immutable/entry/app.B7ohu7U_.js")
+					]).then(([kit, app]) => {
+						kit.start(app, element, {
+							node_ids: [0, 2],
+							data,
+							form: null,
+							error: null
+						});
+					});
+				}
+			</script>
+		</div>
+	</body>
+</html>
