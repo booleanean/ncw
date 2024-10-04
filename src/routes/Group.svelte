@@ -1,13 +1,12 @@
 <script lang="ts">
 	import { writable } from 'svelte/store';
-	import { createEventDispatcher, onMount } from 'svelte';
 
 	export let groupId: string;
 
 	let colorblind: boolean;
 	let form: HTMLFormElement;
 
-	let otherGroupIds = Object.keys(localStorage).filter((v) => v !== groupId);
+	let otherGroupIds = Object.keys(localStorage).filter((v) => v !== groupId && v !== 'bg');
 	console.log(`Group name: ${groupId}, Other group: ${otherGroupIds[0]}`);
 	type MyGroup = {
 		name: string;
@@ -26,21 +25,6 @@
 	data.subscribe((value) => {
 		localStorage.setItem(groupId, JSON.stringify(value));
 	});
-
-	// const changeParticipants = (event: Event) => {
-	// 	$data.participants = (event?.target as HTMLTextAreaElement).value
-	// 		.split(',')
-	// 		.map((v: string) => v.trim());
-	// 	data.update((v) => {
-	// 		return { ...v, participants: $data.participants };
-	// 	});
-	// };
-
-	// const dispatch = createEventDispatcher();
-	// const destroy = () => {
-	// 	localStorage.removeItem(groupId);
-	// 	dispatch('destroy');
-	// };
 
 	const checkbox = (event: Event) => {
 		event.preventDefault();
@@ -75,7 +59,6 @@
 	};
 </script>
 
-<!-- <button on:click={destroy}>Destroy</button> -->
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 <form bind:this={form} on:click={checkbox}>
@@ -133,7 +116,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				{#each $data.participants as mainParticipant, k1}
+				{#each $data.participants as _mainParticipant, k1}
 					<tr>
 						{#each otherGroup.participants as _participant, k2}
 							<td>
@@ -189,7 +172,7 @@
 		position: relative;
 	}
 	table.bonus td {
-		background: #777;
+		background: #444;
 	}
 	table:not(.bonus) td:first-child {
 		border-top: unset;
@@ -214,9 +197,6 @@
 	td:has(:checked) {
 		background: lightgreen;
 	}
-	td:has(:checked:nth-child(2)) {
-		background: green;
-	}
 	table.bonus td:has(:checked)::after,
 	td:has(:checked)::after {
 		content: var(--colorblind-v);
@@ -229,8 +209,19 @@
 		content: var(--colorblind-x);
 		font-family: sans-serif;
 		text-align: center;
-		/* outline: 1px solid blue; */
 		top: 0.3rem;
 		pointer-events: none;
+	}
+	label {
+		position: relative;
+	}
+	label:has(:checked:nth-child(2))::before {
+		position: absolute;
+		content: '';
+		inset: 2px;
+		background-repeat: no-repeat;
+		background-position: center;
+		background-size: contain;
+		background-image: var(--background);
 	}
 </style>

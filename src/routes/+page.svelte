@@ -1,13 +1,13 @@
 <script lang="ts">
 	import Group from './Group.svelte';
 	import { onMount } from 'svelte';
-	// import { v4 as uuid } from 'uuid';
 
 	import { writable } from 'svelte/store';
 
 	let groups = writable<string[]>([]);
 	let addGroupDialog: HTMLDialogElement;
 	let participants = '';
+	let bg: string = '';
 
 	const addGroup = () => {
 		const groupName = 'Group ' + ($groups.length + 1).toString();
@@ -27,7 +27,9 @@
 	};
 
 	let update = () => {
-		$groups = Object.keys(localStorage);
+		$groups = Object.keys(localStorage).filter((v) => v !== 'bg');
+		console.log($groups);
+		bg = localStorage.getItem('bg') || '';
 	};
 
 	let clear = () => {
@@ -35,6 +37,10 @@
 		update();
 	};
 	onMount(update);
+
+	const storeBg = (event: Event) => {
+		localStorage.setItem('bg', (event.target as HTMLTextAreaElement).value || '');
+	};
 </script>
 
 <div class="buttonwrapper">
@@ -54,7 +60,14 @@
 	</button>
 </div>
 
-<div class="groupwrapper" style="--colcount: {$groups.length}">
+<div class="buttonwrapper">
+	<div>
+		<p>A valid value for a CSS "background-image" property:</p>
+		<textarea bind:value={bg} on:change={storeBg}></textarea>
+	</div>
+</div>
+
+<div class="groupwrapper" style="--colcount: {$groups.length}; --background: {bg}">
 	{#each $groups as groupId}
 		<div>
 			<h1 style="grid-colum: 1 / -1">{groupId}</h1>
@@ -84,11 +97,14 @@
 		width: fit-content;
 		margin: 2rem auto;
 	}
+	.buttonwrapper textarea {
+		width: 50vw;
+		height: 16ch;
+	}
 	button {
 		border: 2px solid silver;
 		padding: 0.75rem 1.5rem;
 		border-radius: 8px;
-		/* float: right; */
 		margin: 0 2rem;
 	}
 	.groupwrapper {
