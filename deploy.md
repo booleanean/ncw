@@ -1,0 +1,3 @@
+Deploy from git bash, it'll ask for credentials
+manage git from github desktop
+be very careful it doesn't accidentally include full name instead of pseudonym...

@@ -129,6 +129,7 @@
 		justify-items: start;
 	}
 	table {
+		font-family: sans-serif;
 		border-collapse: collapse;
 	}
 	tr {
