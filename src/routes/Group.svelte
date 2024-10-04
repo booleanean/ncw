@@ -5,6 +5,7 @@
 	export let groupId: string;
 
 	let colorblind: boolean;
+	let form: HTMLFormElement;
 
 	let otherGroupIds = Object.keys(localStorage).filter((v) => v !== groupId);
 	console.log(`Group name: ${groupId}, Other group: ${otherGroupIds[0]}`);
@@ -41,9 +42,33 @@
 	// 	dispatch('destroy');
 	// };
 
-	const checkbox = (e: Event) => {
-		const form = e.currentTarget as HTMLFormElement;
+	const checkbox = (event: Event) => {
+		event.preventDefault();
+
+		const label = event.target as HTMLLabelElement;
+		const inputs = label.querySelectorAll('input');
+		if (inputs.length > 1) {
+			//we're in the required table
+			const regular = inputs[0];
+			const aboveandbeyond = inputs[1];
+
+			if (regular.checked) {
+				if (!aboveandbeyond.checked) {
+					aboveandbeyond.checked = true;
+				} else {
+					aboveandbeyond.checked = false;
+					regular.checked = false;
+				}
+			} else {
+				regular.checked = true;
+			}
+		} else {
+			//we're in the bonus table. Bonus doesn't track 100+
+			inputs[0].checked = !inputs[0].checked;
+		}
+
 		const grid = Array.from(new FormData(form).keys());
+
 		data.update((v) => {
 			return { ...v, grid };
 		});
@@ -51,7 +76,9 @@
 </script>
 
 <!-- <button on:click={destroy}>Destroy</button> -->
-<form on:change={checkbox}>
+<!-- svelte-ignore a11y-click-events-have-key-events -->
+<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+<form bind:this={form} on:click={checkbox}>
 	<table style={colorblind ? "--colorblind-v: 'v'; --colorblind-x: 'x'" : ''}>
 		{#if $data.participants.length > 0}
 			<thead>
@@ -80,6 +107,11 @@
 											type="checkbox"
 											name={`${k1}-${k2}`}
 											checked={$data.grid.indexOf(`${k1}-${k2}`) !== -1}
+										/>
+										<input
+											type="checkbox"
+											name={`x${k1}-${k2}`}
+											checked={$data.grid.indexOf(`x${k1}-${k2}`) !== -1}
 										/>
 									</label>
 								</td>
@@ -181,6 +213,9 @@
 	.bonus td:has(:checked),
 	td:has(:checked) {
 		background: lightgreen;
+	}
+	td:has(:checked:nth-child(2)) {
+		background: green;
 	}
 	table.bonus td:has(:checked)::after,
 	td:has(:checked)::after {
