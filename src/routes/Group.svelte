@@ -33,18 +33,31 @@
 		const inputs = label.querySelectorAll('input');
 		if (inputs.length > 1) {
 			//we're in the required table
-			const regular = inputs[0];
-			const aboveandbeyond = inputs[1];
+			const half = inputs[0];
+			const regular = inputs[1];
+			const aboveandbeyond = inputs[2];
 
-			if (regular.checked) {
-				if (!aboveandbeyond.checked) {
-					aboveandbeyond.checked = true;
-				} else {
-					aboveandbeyond.checked = false;
+			const state = `${half.checked ? '1' : '0'}${regular.checked ? '1' : '0'}${aboveandbeyond.checked ? '1' : '0'}`;
+			switch (state) {
+				case '000':
+					half.checked = true;
+					break;
+				case '100':
+					half.checked = false;
+					regular.checked = true;
+					break;
+				case '010':
 					regular.checked = false;
-				}
-			} else {
-				regular.checked = true;
+					aboveandbeyond.checked = true;
+					break;
+				case '001':
+					aboveandbeyond.checked = false;
+					break;
+				default:
+					half.checked = false;
+					regular.checked = false;
+					aboveandbeyond.checked = false;
+					break;
 			}
 		} else {
 			//we're in the bonus table. Bonus doesn't track 100+
@@ -86,6 +99,11 @@
 							{:else}
 								<td>
 									<label>
+										<input
+											type="checkbox"
+											name={`h${k1}-${k2}`}
+											checked={$data.grid.indexOf(`h${k1}-${k2}`) !== -1}
+										/>
 										<input
 											type="checkbox"
 											name={`${k1}-${k2}`}
@@ -215,7 +233,16 @@
 	label {
 		position: relative;
 	}
-	label:has(:checked:nth-child(2))::before {
+	/*half checked*/
+	table:not(.bonus) label:has(:checked:first-child)::before {
+		position: absolute;
+		content: '';
+		inset: 0;
+		background-color: rgb(255, 99, 99);
+		clip-path: polygon(0 0, 100% 0, 100% 100%);
+	}
+	/*Above and beyond checked*/
+	label:has(:checked:nth-child(3))::before {
 		position: absolute;
 		content: '';
 		inset: 2px;
