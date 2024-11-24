@@ -7,10 +7,12 @@
 	let groups = writable<string[]>([]);
 	let addGroupDialog: HTMLDialogElement;
 	let participants = '';
+	let groupname = 'Group ' + ($groups.length + 1).toString();
+
 	let bg: string = '';
 
 	const addGroup = () => {
-		const groupName = 'Group ' + ($groups.length + 1).toString();
+		const groupName = groupname;
 		const participantlist = participants
 			.split(/[,\n\t]/)
 			.map((v) => v.trim())
@@ -20,8 +22,8 @@
 			groupName,
 			JSON.stringify({ name: groupName, participants: participantlist, grid: [] })
 		);
-		groups.update((v) => [...v, 'Group ' + ($groups.length + 1).toString()]);
-
+		groups.update((v) => [...v, groupName]);
+		groupname = 'Group ' + ($groups.length + 1).toString();
 		addGroupDialog.close();
 		participants = '';
 	};
@@ -70,7 +72,7 @@
 <div class="groupwrapper" style="--colcount: {$groups.length}; --background: {bg}">
 	{#each $groups as groupId}
 		<div>
-			<h1 style="grid-colum: 1 / -1">{groupId}</h1>
+			<h1 style="grid-colum: 1 / -1">{@html groupId}</h1>
 			{#each new Array($groups.length) as _v, i}
 				<h2>{i == 0 ? 'main' : 'bonus'}</h2>
 			{/each}
@@ -80,6 +82,8 @@
 </div>
 <dialog bind:this={addGroupDialog}>
 	<form>
+		<label for="groupname">Group name (HTML allowed)</label>
+		<input type="text" id="groupname" name="groupname" bind:value={groupname} />
 		<label for="participants">Participants for new group (comma or newline separated):</label>
 		<textarea name="participants" id="#participants" bind:value={participants} rows="10"></textarea>
 		<button on:click={addGroup}>Create Group</button>
