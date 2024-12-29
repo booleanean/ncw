@@ -20,7 +20,12 @@
 
 		localStorage.setItem(
 			groupName,
-			JSON.stringify({ name: groupName, participants: participantlist, grid: [] })
+			JSON.stringify({
+				name: groupName,
+				participants: participantlist,
+				grid: [],
+				index: $groups.length
+			})
 		);
 		groups.update((v) => [...v, groupName]);
 		groupname = 'Group ' + ($groups.length + 1).toString();
@@ -29,7 +34,13 @@
 	};
 
 	let update = () => {
-		$groups = Object.keys(localStorage).filter((v) => v !== 'bg');
+		$groups = Object.keys(localStorage)
+			.filter((v) => v !== 'bg')
+			.sort(
+				(a: string, b: string) =>
+					JSON.parse(localStorage.getItem(a) || '').index -
+					JSON.parse(localStorage.getItem(b) || '').index
+			);
 		console.log($groups);
 		bg = localStorage.getItem('bg') || '';
 	};
